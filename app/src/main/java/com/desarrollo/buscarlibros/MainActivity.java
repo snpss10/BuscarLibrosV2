@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -66,7 +67,13 @@ public class MainActivity extends AppCompatActivity {
                 search();
             }
         });
+
+        cargarPreferencias();
+
     }
+
+
+
     private void search()
     {
         String search_query = search_edit_text.getText().toString();
@@ -93,6 +100,23 @@ public class MainActivity extends AppCompatActivity {
         Uri.Builder buider = uri.buildUpon();
 
         parseJson(buider.toString());
+        guardarPreferencias();
+
+    }
+    private void cargarPreferencias() {
+        SharedPreferences preferences = getSharedPreferences("credenciales", Context.MODE_PRIVATE);
+        String libro1=preferences.getString("elibro","no existe la informacion");
+        search_edit_text.setText(libro1);
+        search();
+
+    }
+
+    private void guardarPreferencias() {
+        SharedPreferences preferences = getSharedPreferences("credenciales", Context.MODE_PRIVATE);
+        String libro=search_edit_text.getText().toString();
+        SharedPreferences.Editor editor=preferences.edit();
+        editor.putString("elibro",libro);
+        editor.commit();
     }
 
     private boolean Read_network_state(Context context)
